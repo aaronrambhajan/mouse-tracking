@@ -1,0 +1,28 @@
+{
+  "name": "mouse-tracking",
+  "version": "1.0.0",
+  "description": "mouse-tracking experiment",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronrambhajan/mouse-tracking.git"
+  },
+  "author": "aaron rambhajan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aaronrambhajan/mouse-tracking/issues"
+  },
+  "homepage": "https://github.com/aaronrambhajan/mouse-tracking#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "connect-mongo": "^2.0.1",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.1.5",
+    "underscore": "^1.9.1"
+  }
+}
