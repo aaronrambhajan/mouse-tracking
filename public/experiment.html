@@ -2,9 +2,9 @@
 <html>
   <head>
     <title>Mouse-Tracking</title>
-    <script src="jspsych/jspsych.js"></script>
-    <script src="jspsych/plugins/jspsych-html-keyboard-response.js"></script>
-    <script src="jspsych/plugins/jspsych-aaron-response.js"></script>
+    <script src="../jsPsych/jspsych.js"></script>
+    <script src="../jsPsych/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="../jsPsych/plugins/jspsych-aaron-response.js"></script>
     <link rel="stylesheet" href="aaron.css"></link>
   </head>
   <body>
@@ -38,11 +38,11 @@
     };
 
     // Answers
-    const left = 'left_label_div',
-          right = 'right_label_div',
+    const LEFT = 'left_label_div',
+          RIGHT = 'right_label_div',
           N_LABELS = ['./img/labels/new/1a.png', './img/labels/new/2a.png', './img/labels/new/3a.png', './img/labels/new/4a.png'],
           O_LABELS = ['./img/labels/old/1a.jpg', './img/labels/old/2a.jpg', './img/labels/old/3a.jpg', './img/labels/old/4a.jpg'],
-          items = ['./img/items/blue.png', './img/items/orange.png'];
+          ITEMS = ['./img/items/blue.png', './img/items/orange.png'];
 
     // 10 YES && NEW == 10 NO && OLD  | Answer YES to the NEW label, OLD label must be INCORRECT
     // 10 YES && OLD == 10 NO && NEW  | Answer YES to the OLD label, NEW label must be INCORRECT
@@ -62,11 +62,14 @@
       {type: 'aaron-response',
        label_left: N_LABELS[0], 
        label_right: O_LABELS[1], 
-       target_item: items[0],
+       target_item: ITEMS[0],
        data: {
         test_part: 'test',
-        correct_response: left
-        }
+        correct_response: LEFT
+        },
+       on_finish: function(data) {
+        data.correct = (data.response == data.correct_response);
+       }
       };
 
 
@@ -79,24 +82,6 @@
     //     // jsPsych.randomization.sampleWithoutReplacement([250, 500, 750, 1000, 1250, 1500, 1750, 2000], 1)[0];
     //   },
     //   data: {test_part: 'fixation'}
-    // }
-
-    // var test = {
-    //   type: "aaron-response",
-    //   label_left: jsPsych.timelineVariable('label_left'),
-    //   label_right: jsPsych.timelineVariable('label_right'), 
-    //   target_item: jsPsych.timelineVariable('target_item'),
-    //   data: jsPsych.timelineVariable('data'),
-    //   on_finish: function(data) {  
-    //     data.correct = (data.response == data.correct_response);
-    //   },
-    // }
-
-    // var test_procedure = {
-    //   timeline: [fixation, test],
-    //   timeline_variables: test_stimuli,
-    //   repetitions: 2,
-    //   randomize_order: true
     // }
 
     var debrief_block = {
@@ -115,10 +100,9 @@
     };
 
 
-    timeline.push(welcome_block);
-    timeline.push(instructions);
+    // timeline.push(welcome_block);
+    // timeline.push(instructions);
     timeline.push(test1);
-    timeline.push(test2);
     timeline.push(debrief_block);
 
     /* start the experiment */

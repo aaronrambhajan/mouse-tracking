@@ -53,136 +53,101 @@ jsPsych.plugins["aaron-response"] = (function() {
     }
   }
 
-  let res = null;
 
   plugin.trial = function(display_element, trial) {
-    var coords = [];
-    var start_time = ((new Date()).getTime());
-    document.onmousemove = handleMouseMove;
 
+    var coords = [],
+        response = {rt: null, key: null}; 
+        start_time = ((new Date()).getTime());
 
     /* Write HTML image elements. */
     var left_label_div = ('<div class="left_label_div"><img src="' + trial.label_left + '" id="stimuli"></img></div>'),
         right_label_div = ('<div class="right_label_div"><img src="' + trial.label_right +'" id="stimuli"></img></div>'),
         item_div = ('<div class="item_div"><img src="' + trial.target_item +'" id="item"></img></div>');
 
-    // Draw
     display_element.innerHTML = trial.prompt+left_label_div+right_label_div+item_div;
     
+    let stimuli = display_element.querySelector('#item'),
+        displayBox = display_element.querySelector('.item_div'),
+        shiftX, shiftY, res = null;
+
+    document.onmousemove = getMouseCoords;
+    stimuli.onmousedown = mouseDown;
+    stimuli.onmouseup = mouseUp; 
+
+
     // Get mouse coordinates.
-    function handleMouseMove(event) {
+    function getMouseCoords(event) {
         var e = window.event;
         coords.push({x: e.clientX, y: e.clientY, time: (((new Date()).getTime()) - start_time)});
     };
 
-
-    /* 
-     * Update the location of the item.
-     */
-    let currentDroppable = null;
-    let stimuli = display_element.querySelector('#item');
-    let displayBox = display_element.querySelector('.item_div');
-    stimuli.onmousedown = function(event) {
-
-      var shiftX = (event.clientX - stimuli.getBoundingClientRect().left),
-          shiftY = (event.clientY - stimuli.getBoundingClientRect().top),
-          responseFlag = false;
+    function mouseDown(event) {
+      shiftX = (event.clientX - stimuli.getBoundingClientRect().left);
+      shiftY = (event.clientY - stimuli.getBoundingClientRect().top);
 
       stimuli.style.position = 'absolute';
       stimuli.style.zIndex = 1000;
       document.body.append(stimuli);
       document.addEventListener('mousemove', onMouseMove);
-
-
       moveAt(event.pageX, event.pageY);
-      function moveAt(pageX, pageY) {
-        stimuli.style.left = pageX - shiftX + 'px';
-        stimuli.style.top = pageY - shiftY + 'px';
+    }
 
-        // Trigger label display.
-        if (pageY-shiftY <= displayBox.getBoundingClientRect().top) {
-          display_element.querySelector('.left_label_div').style.visibility = 'visible';
-          display_element.querySelector('.right_label_div').style.visibility = 'visible';
-        }
+    function moveAt(pageX, pageY) {
+      stimuli.style.left = pageX - shiftX + 'px';
+      stimuli.style.top = pageY - shiftY + 'px';
+    }
+
+    function onMouseMove(event) {
+      moveAt(event.pageX, event.pageY);
+      var ll_div = display_element.querySelector('.left_label_div'),
+          rr_div = display_element.querySelector('.right_label_div');
+
+      // LABEL DISPLAY
+      if (event.pageY-shiftY <= displayBox.getBoundingClientRect().top) {
+        ll_div.style.visibility = 'visible';
+        rr_div.style.visibility = 'visible';
       }
 
+      stimuli.hidden = true;
+      let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+      stimuli.hidden = false;
+      updateDroppable(elemBelow, ll_div, rr_div);
+    }
 
-      function onMouseMove(event) {
-        moveAt(event.pageX, event.pageY);
+    function updateDroppable(dropBelow, ll, rr) {
+      var elem = dropBelow.closest('.left_label_div') || dropBelow.closest('.right_label_div');
 
-        stimuli.hidden = true;
-        let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
-        stimuli.hidden = false;
-        if (!elemBelow) return;
-
-        // If NULL, then we're not on a target area!
-        let droppableBelow = setDroppableBelow(elemBelow);
-        updateDroppable(droppableBelow);
+      if (elem == ll) {
+        ll.style.background = 'green', rr.style.background = '', res = elem;
+      } else if (elem == rr) {
+        ll.style.background = '', rr.style.background = 'green', res = elem;
+      } else {
+        ll.style.background = '', rr.style.background = '', res = null;
       }
+    }
 
-
-      function setDroppableBelow(elem) {
-        return elem.closest('.left_label_div') || elem.closest('.right_label_div');
+    function mouseUp() {
+      document.removeEventListener('mousemove', onMouseMove);
+      if (res) {
+        after_response({
+          rt: ((new Date()).getTime()) - start_time,
+          key: res.className
+        });
       }
-
-
-      function updateDroppable(dropBelow) {
-        if (currentDroppable != dropBelow) {
-          if (currentDroppable) {
-            currentDroppable.style.background = '';
-          }
-          currentDroppable = dropBelow;
-          if (currentDroppable) {
-            currentDroppable.style.background = 'green';
-            res = currentDroppable;
-            responseFlag = true; // In the area.
-          }
-        }
-      }
-
-      function mouseUp() {
-        document.removeEventListener('mousemove', onMouseMove);
-        if (responseFlag) {
-          after_response({
-            rt: ((new Date()).getTime()) - start_time,
-            key: res.className
-          });
-        }
-      }
-
-
-      // Records a response only when mouse is lifted.
-      stimuli.onmouseup = function() {
-        document.removeEventListener('mousemove', onMouseMove);
-        // stimuli.onmouseup = null;
-        if (responseFlag) {
-          var info = {
-            rt: ((new Date()).getTime()) - start_time,
-            key: res.className
-          }
-          after_response(info);
-        }
-      };
-
-    };
+    }
 
     item.ondragstart = function() {
       return false;
     };
 
 
-    // Store response.
-    var response = {
-      rt: null,
-      key: null
-    };  
-
     // function to end trial when it is time
     var end_trial = function() {
       document.body.removeChild(stimuli);
       jsPsych.pluginAPI.clearAllTimeouts(); // kill any remaining setTimeout handlers
 
-      // gather the data to store for the trial
+      // gather the data to store for the trials
       var trial_data = {
         "rt": response.rt,
         "label_left": trial.label_left,
@@ -192,15 +157,14 @@ jsPsych.plugins["aaron-response"] = (function() {
         "mouse_movement": coords
       };
 
-      display_element.innerHTML = ''; // console.log(display_element.innerHTML); // clear the display
+      display_element.innerHTML = ''; // clear the display
       coords = []; // clear the coordinate data
       jsPsych.finishTrial(trial_data); // move on to the next trial
     };
 
+
     // function to handle responses by the subject
     var after_response = function(info) {
-      // after a valid response, the stimulus will have the CSS class 'responded'
-      // which can be used to provide visual feedback that a response was recorded
       display_element.querySelector('#stimuli').className += 'responded';
 
       // only record the first response
