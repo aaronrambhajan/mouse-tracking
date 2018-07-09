@@ -7,7 +7,7 @@ const body_parser = require('body-parser');
 const DB = require('./models/db.js');
 const trial = require('./models/trials.js');
 
-DB.connect(false); // true if in production
+DB.connect(true); // true if in production
 app.use(body_parser.json());
 app.use(express.static(__dirname + '/public'));
 app.use('/jsPsych', express.static(__dirname + "/jsPsych"));
