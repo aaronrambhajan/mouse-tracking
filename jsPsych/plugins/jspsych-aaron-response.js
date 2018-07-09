@@ -8,6 +8,12 @@ jsPsych.plugins["aaron-response"] = (function() {
     name: 'aaron-response',
     description: '',
     parameters: {
+      subject: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'subject',
+        default: undefined,
+        description: 'Subject ID for the given participant.'
+      },
       label_left: {
         type: jsPsych.plugins.parameterType.IMAGE,
         pretty_name: 'label_left',
@@ -25,6 +31,12 @@ jsPsych.plugins["aaron-response"] = (function() {
         pretty_name: 'target_item',
         default: undefined,
         description: 'The item to make a decision with.'
+      },
+      correct_response: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'correct_response',
+        default: undefined,
+        description: 'The correct response for this trial.'
       },
       prompt: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -57,7 +69,7 @@ jsPsych.plugins["aaron-response"] = (function() {
   plugin.trial = function(display_element, trial) {
 
     var coords = [],
-        response = {rt: null, key: null}; 
+        response = {rt: null, label: null}; 
         start_time = ((new Date()).getTime());
 
     /* Write HTML image elements. */
@@ -132,7 +144,7 @@ jsPsych.plugins["aaron-response"] = (function() {
       if (res) {
         after_response({
           rt: ((new Date()).getTime()) - start_time,
-          key: res.className
+          label: res.className
         });
       }
     }
@@ -149,11 +161,13 @@ jsPsych.plugins["aaron-response"] = (function() {
 
       // gather the data to store for the trials
       var trial_data = {
-        "rt": response.rt,
-        "label_left": trial.label_left,
-        "label_right": trial.label_right,
+        "subject": trial.subject,
+        "left_label_div": trial.label_left,
+        "right_label_div": trial.label_right,
         "target_item": trial.target_item,
-        "response": response.key,
+        "rt": response.rt,
+        "response": response.label,
+        "correct": (trial.correct_response == response.label),
         "mouse_movement": coords
       };
 
@@ -168,7 +182,7 @@ jsPsych.plugins["aaron-response"] = (function() {
       display_element.querySelector('#stimuli').className += 'responded';
 
       // only record the first response
-      if (response.key == null) {
+      if (response.label == null) {
         response = info;
       }
 

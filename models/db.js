@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-let _URL = 'mongodb://localhost/jspsych';
+let _URL = 'mongodb://localhost/mousetrack';
 let _PORT = 3000;
 
 function connect(production) {

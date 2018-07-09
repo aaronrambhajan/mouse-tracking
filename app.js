@@ -5,6 +5,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const body_parser = require('body-parser');
 const DB = require('./models/db.js');
+const trial = require('./models/trials.js');
 
 DB.connect(false); // true if in production
 app.use(body_parser.json());
@@ -42,13 +43,13 @@ app.post('/user-data', function(req, res) {
 app.post('/experiment-data', function(req, res) {
     trial.create({
         'subject': req.body[0].subject,
-        'email': req.session.email,
-        'trial': req.body[0].trial_index,
-        'stimulus': req.body[0].stimulus,
+        'left_label_div': req.body[0].left_label_div,
+        'right_label_div': req.body[0].right_label_div,
+        'target_item': req.body[0].target_item,
         'rt': req.body[0].rt,
-        'r': req.body[0].key_press,
+        'response': req.body[0].response,
         'correct': req.body[0].correct,
-        'timestamp': req.body[0].date
+        'mouse_movement': req.body[0].mouse_movement 
     });
     res.end();
 });

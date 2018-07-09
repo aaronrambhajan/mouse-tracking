@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Mouse-Tracking</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="../jsPsych/jspsych.js"></script>
     <script src="../jsPsych/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="../jsPsych/plugins/jspsych-aaron-response.js"></script>
@@ -16,7 +17,7 @@
     /* define welcome message trial */
     var welcome_block = {
       type: "html-keyboard-response",
-      stimulus: "Welcome to the experiment. Press f or j to begin.",
+      stimulus: "Mouse-Tracking. Press 'f' or 'j' to begin.",
       choices: ['f', 'j']
     };
 
@@ -37,8 +38,27 @@
       // post_trial_gap: 2000
     };
 
+    function saveTrials() {
+      // Only get the last trial–we save after each.
+      let _data = jsPsych.data.getLastTrialData();
+
+      $.ajax({
+        type: "POST",
+        url: "/experiment-data",
+        data: _data.json(),
+        contentType: "application/json"
+      })
+      .done(function() {
+        alert('trial finished!');
+      })
+      .fail(function() {
+        alert('DID NOT WORK');
+      })
+    }
+
     // Answers
-    const LEFT = 'left_label_div',
+    const SBJ = (new Date().valueOf().toString(36) + Math.random().toString(36).substr(2)),
+          LEFT = 'left_label_div',
           RIGHT = 'right_label_div',
           N_LABELS = ['./img/labels/new/1a.png', './img/labels/new/2a.png', './img/labels/new/3a.png', './img/labels/new/4a.png'],
           O_LABELS = ['./img/labels/old/1a.jpg', './img/labels/old/2a.jpg', './img/labels/old/3a.jpg', './img/labels/old/4a.jpg'],
@@ -57,19 +77,24 @@
     // Choose appropriate labels.
     // Construct trial!
 
-
     var test1 = 
       {type: 'aaron-response',
+       subject: SBJ,
        label_left: N_LABELS[0], 
        label_right: O_LABELS[1], 
        target_item: ITEMS[0],
-       data: {
-        test_part: 'test',
-        correct_response: LEFT
-        },
-       on_finish: function(data) {
-        data.correct = (data.response == data.correct_response);
-       }
+       correct_response: LEFT,
+       on_finish: saveTrials
+      };
+
+   var test2 = 
+      {type: 'aaron-response',
+       subject: SBJ,
+       label_left: N_LABELS[0], 
+       label_right: O_LABELS[1], 
+       target_item: ITEMS[0],
+       correct_response: LEFT,
+       on_finish: saveTrials
       };
 
 
@@ -103,6 +128,7 @@
     // timeline.push(welcome_block);
     // timeline.push(instructions);
     timeline.push(test1);
+    timeline.push(test2);
     timeline.push(debrief_block);
 
     /* start the experiment */
