@@ -1,13 +1,3 @@
-/*
- * CSS for jsPsych experiments.
- *
- * This stylesheet provides minimal styling to make jsPsych
- * experiments look polished without any additional styles.
- */
-
- /* Container holding jsPsych content */
-
-
 body {
   background-color: pink;
 }
@@ -89,7 +79,9 @@ body {
 }
 
 #stimuli {
-  width: auto;
+  padding-top: 5%;
+  width: 100%;
+  height: auto;
   max-height: 75%;
 }
 

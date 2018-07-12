@@ -3,6 +3,7 @@
   <head>
     <title>Mouse-Tracking</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="../jsPsych/jspsych.js"></script>
     <script src="../jsPsych/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="../jsPsych/plugins/jspsych-aaron-response.js"></script>
@@ -39,7 +40,6 @@
     };
 
     function saveTrials() {
-      // Only get the last trial–we save after each.
       let _data = jsPsych.data.getLastTrialData();
 
       $.ajax({
@@ -57,32 +57,128 @@
     }
 
     // Answers
-    const SBJ = (new Date().valueOf().toString(36) + Math.random().toString(36).substr(2)),
-          LEFT = 'left_label_div',
-          RIGHT = 'right_label_div',
-          N_LABELS = ['./img/labels/new/1a.png', './img/labels/new/2a.png', './img/labels/new/3a.png', './img/labels/new/4a.png'],
-          O_LABELS = ['./img/labels/old/1a.jpg', './img/labels/old/2a.jpg', './img/labels/old/3a.jpg', './img/labels/old/4a.jpg'],
-          ITEMS = ['./img/items/blue.png', './img/items/orange.png'];
+    const 
+      SBJ = (new Date().valueOf().toString(36) + Math.random().toString(36).substr(2)),
+      LEFT = 'left_label_div', RIGHT = 'right_label_div',
+      nLABELS = ['./img/labels/new/1b.png', './img/labels/new/2b.png', './img/labels/new/3b.png', './img/labels/new/4b.png'],
+      oLABELS = ['./img/labels/old/1b.png', './img/labels/old/2b.png', './img/labels/old/3b.png', './img/labels/old/4b.png'],
+      LEGEND = {'item': 
+                  {
+                   images: ['1.jpg', '2.jpg', '3.jpg'],
+                   old: 1,
+                   new: 1
+                  },
+                 'otherItem':
+                  {
+                   images: ['3.jpg', '4.jpg', '5.jpg'],
+                   old: 3,
+                   new: 4
+                  }
+                };
 
-    // 10 YES && NEW == 10 NO && OLD  | Answer YES to the NEW label, OLD label must be INCORRECT
-    // 10 YES && OLD == 10 NO && NEW  | Answer YES to the OLD label, NEW label must be INCORRECT
-    // *5 YES && ALL                  | Answer YES to NEW or OLD label
-    // *5 NO && ALL                   | Answer NO to NEW and OLD label
+    /*
+      * Takes the correct label index, deletes it from an array, then
+      * returns a randomly chosen one to serve as the WRONG label in 
+      * a given trial.
+      */
+    function _getWrongLabelIndex(correctIndex) {
+      var x = [0, 1, 2, 3];
+      x.splice(correctIndex, 1);
+      return _.shuffle(x).pop();
+    }
 
-    // Pick an item.
-    // Pick an image of the item.
-    // Remove the image from the array.
-    // Determine which trial type we're doing.
-    // Look into dictionaries to determine which labels are correct/incorrect for this item.
-    // Choose appropriate labels.
-    // Construct trial!
+    /*
+      * Takes an array, duplicates it to have <instances> many elements,
+      * then shuffles it. If it can't be doubled, it will shuffle around
+      * then add enough to fill to <instances>.
+      * 
+      * NOTE: Won't work for odd lengths.
+      * NOTE: instances > arr.length
+      * 
+      */
+    function _repeatAndShuffleArray(arr, instances) {
+      var timesToRepeat = (instances / arr.length); // instances > arr.length
+      var nArr = [];
 
+      if (timesToRepeat >= 2) { // This method wouldn't work for odd numbers
+          for (var i=0; i<Math.round(timesToRepeat); i++) {
+            arr.map((item) => nArr.push(item));
+          }
+          return _.shuffle(nArr);
+
+      } else { // 
+        return (_.shuffle(arr)).concat((_.shuffle(arr)).slice(0, (instances-arr.length)));
+      }
+    }
+
+    /* 
+    | TYPE | # Trials | CONDITION              | DESCRIPTION     
+    |  1   |    20    | YES && NEW / NO && NEW | Answer YES to the NEW label, OLD label must be INCORRECT
+    |  2   |    20    | YES && OLD / NO && OLD | Answer YES to the OLD label, NEW label must be INCORRECT
+
+    - Decide Old/New
+    - Decide Correct on Left or Right
+    - Pick item -> get item image
+    - Get [item] correct label
+    - Randomly pick item incorrect label
+    */
+    function makeTrials() {
+      let timeline = [],
+          trialLength = 40,
+          conditions = repeatAndShuffleArray([true, false], trialLength), 
+          divs = _repeatAndShuffleArray([true, false], trialLength),
+          targets = _repeatAndShuffleArray(ITEMS, trialLength);
+
+      for (var i=0; i<trialLength; i++) {
+
+        var leftLabel, rightLabel, correctDiv, index;
+
+        /* Annoying conditionals to get proper information */
+        if (conditions[i]) { // New
+          index = (LEGEND[targets[i]].new) - 1; // runs 1-4
+          if(divs[i]) { // left == correct
+            leftLabel = nLABELS[index];
+            rightLabel = nLABELS[_getWrongLabelIndex(index)];
+            correctDiv = 'left_label_div';
+          } else { // right == correct
+            leftLabel = nLABELS[_getWrongLabelIndex(index)];
+            rightLabel = nLABELS[index];
+            correctDiv = 'right_label_div';
+          }
+        } else { // Old
+          index = (LEGEND[targets[i]].old) - 1; // runs 1-4
+          if(divs[i]) { // left == correct
+            leftLabel = oLABELS[index];
+            rightLabel = oLABELS[_getWrongTrialIndex(index)];
+            correctDiv = 'left_label_div';
+          } else { // right == correct
+            leftLabel = oLABELS[_getWrongTrialIndex(index)];
+            rightLabel = oLABELS[index];
+            correctDiv = 'right_label_div';
+          }
+        }
+
+        timeline.push({
+          type: 'aaron-response',
+          subject: SBJ,
+          label_left: leftLabel,
+          label_right: rightLabel,
+          target_item: _.sample(targets[i].images, 1), // picks a random image
+          correct_response: correctDiv,
+          on_finish: saveTrials
+        });
+      }
+      return timeline;
+    }
+
+ 
+    var tempItems = ['./img/items/blue.png', './img/items/orange.png'];
     var test1 = 
       {type: 'aaron-response',
        subject: SBJ,
-       label_left: N_LABELS[0], 
-       label_right: O_LABELS[1], 
-       target_item: ITEMS[0],
+       label_left: nLABELS[0], 
+       label_right: oLABELS[1], 
+       target_item: tempItems[0],
        correct_response: LEFT,
        on_finish: saveTrials
       };
@@ -90,9 +186,9 @@
    var test2 = 
       {type: 'aaron-response',
        subject: SBJ,
-       label_left: N_LABELS[0], 
-       label_right: O_LABELS[1], 
-       target_item: ITEMS[0],
+       label_left: nLABELS[0], 
+       label_right: oLABELS[1], 
+       target_item: tempItems[0],
        correct_response: LEFT,
        on_finish: saveTrials
       };
