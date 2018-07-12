@@ -12,33 +12,52 @@
   <body>
   </body>
   <script>
-    /* create timeline */
-    var timeline = [];
+    // Answers
+    const 
+      SBJ = (new Date().valueOf().toString(36) + Math.random().toString(36).substr(2)),
+      LEFT = 'left_label_div', RIGHT = 'right_label_div',
+      nLABELS = ['./img/labels/new/1b.png', './img/labels/new/2b.png', './img/labels/new/3b.png', './img/labels/new/4b.png'],
+      oLABELS = ['./img/labels/old/1b.png', './img/labels/old/2b.png', './img/labels/old/3b.png', './img/labels/old/4b.png'],
+      ITEMS = ['Sheets (Paper)', 'Juice Box (Paper)', 'Coffee Cup Whole', 'Coffee Cup', 'Food Container (Styrofoam)', 'Plate (Paper)', 'Milk Carton (Paper)', 'Cardboard Box (Paper)', 'Cold Cup Whole', 'Coffee Cup Lid', 'Magazine (Paper)', 'Bag (Paper)', 'Aluminum Can', 'Cup (Styrofoam)', 'Coffee Cup Sleeve', 'Wrapper (Paper)', 'Utensil (Plastic)','Bottle (Plastic)', 'Chip Bag', 'Food Container (Plastic)', 'Food', 'Shopping Bag (Paper)', 'Bag (Plastic)', 'Cigarette Box (Paper)', 'Yogurt Container (Plastic)', 'Newspaper (Paper)', 'Receipt (Paper)', 'Straw (Plastic)', 'Used Tissue', 'Cup (Plastic)', 'Cold Cup Lid', 'Bottle (Glass)', 'Pizza Tray (Paper)', 'Food Container (Paper)'],
+      LEGEND = 
+{'Coffee Cup Whole': {images: ['./img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.51.56 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.46.53 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.53.59 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.50.15 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.51.21 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.38.54 AM.png', './img/items/Coffee Cup Whole/Take Out Coffee Cup_4.jpg', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.42.58 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.38.25 AM.png', './img/items/Coffee Cup Whole/Take Out Coffee Cup_7.jpg', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.54.36 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.50.27 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.40.38 AM.png', './img/items/Coffee Cup Whole/Take Out Coffee Cup_2.jpg', './img/items/Coffee Cup Whole/Take Out Coffee Cup_17.jpg', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.41.16 AM.png', './img/items/Coffee Cup Whole/To Go Coffee Cup_10.jpg', './img/items/Coffee Cup Whole/To Go Coffee Cup_7.jpg', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.52.21 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.47.48 AM.png', './img/items/Coffee Cup Whole/To Go Coffee Cup_4.jpg', './img/items/Coffee Cup Whole/Take Out Coffee Cup_22.jpg', './img/items/Coffee Cup Whole/To Go Coffee Cup_1.jpg', './img/items/Coffee Cup Whole/ScreenShot 2017-09-19 at 10.38.43 AM.png', './img/items/Coffee Cup Whole/Take Out Coffee Cup_21.jpg', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.45.16 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.42.00 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.37.58 AM.png', './img/items/Coffee Cup Whole/Screen Shot 2017-09-19 at 10.49.47 AM.png'], new: 2, old: 4
+}, 'Coffee Cup': {images: ['./img/items/Coffee Cup/Takeaway Cup_45.jpg', './img/items/Coffee Cup/Takeaway Coffee Cup_23.jpg', './img/items/Coffee Cup/Takeaway Cup_41.jpg', './img/items/Coffee Cup/Takeaway Coffee Cup_35.jpg', './img/items/Coffee Cup/Takeaway Coffee Cup_1.jpg', './img/items/Coffee Cup/Takeaway Coffee Cup_3.jpg', './img/items/Coffee Cup/To Go Coffee Cup_23.jpg', './img/items/Coffee Cup/Takeaway Coffee Cup_43.jpg', './img/items/Coffee Cup/Takeaway Cup_5.jpg', './img/items/Coffee Cup/Takeaway Cup_17.jpg', './img/items/Coffee Cup/Takeaway Coffee Cup_10.jpg', './img/items/Coffee Cup/Takeaway Coffee Cup_38.jpg', './img/items/Coffee Cup/Takeaway Coffee Cup_29.jpg'], new: 2, old: 4
+}, 'Coffee Cup Lid': {images: ['./img/items/Coffee Cup Lid/Coffee Cup Lid_17.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_29.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_10.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_49.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_2.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_5.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_6.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_7.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_9.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_8.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_44.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_23.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_34.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_20.jpg', './img/items/Coffee Cup Lid/Coffee Cup Lid_18.jpg'], new: 1, old: 2
+}, 'Coffee Cup Sleeve': {images: ['./img/items/Coffee Cup Sleeve/Cardboard Drink Sleeve_1.jpg', './img/items/Coffee Cup Sleeve/Cardboard Drink Sleeve_3.jpg', './img/items/Coffee Cup Sleeve/Coffee Cup Sleeve_17.jpg', './img/items/Coffee Cup Sleeve/Cardboard Drink Sleeve_16.jpg', './img/items/Coffee Cup Sleeve/Cardboard Drink Sleeve_6.jpg', './img/items/Coffee Cup Sleeve/Cardboard Drink Sleeve_14.jpg', './img/items/Coffee Cup Sleeve/Cardboard Drink Sleeve_15.jpg', './img/items/Coffee Cup Sleeve/Coffee Cup Sleeve_2.jpg', './img/items/CoffeeCup Sleeve/Coffee Cup Sleeve_44.jpg'], new: 3, old: 3
+}, 'Cold Cup Whole': {images: ['./img/items/Cold Cup Whole/Cold Starbucks_18.jpg', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.54.53 AM.png', './img/items/Cold Cup Whole/Cold Tims Drink_10.jpg', './img/items/Cold Cup Whole/Cold Tims Drink_38.jpg', './img/items/Cold Cup Whole/Cold Tims Drink_13.jpg', './img/items/Cold Cup Whole/Cold Starbucks_21.jpg', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.48.37 AM.png', './img/items/Cold Cup Whole/Cold Tims Drink_15.jpg', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.52.38 AM.png', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.53.43 AM.png', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.48.50 AM.png', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.44.25 AM.png', './img/items/Cold Cup Whole/Cold CupLid_4.jpg', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.46.00 AM.png', './img/items/Cold Cup Whole/Cold Tims Drink_4.jpg','./img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.52.12 AM.png', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.42.30 AM.png', './img/items/Cold Cup Whole/Cold Tims Drink_47.jpg', './img/items/Cold Cup Whole/Cold Starbucks_2.jpg', './img/items/Cold Cup Whole/Cold Tims Drink_50.jpg', './img/items/Cold Cup Whole/Cold Tims Drink_44.jpg', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at10.48.57 AM.png', './img/items/Cold Cup Whole/Cold Starbucks_1.jpg', './img/items/Cold Cup Whole/Cold Cup Lid_32.jpg', './img/items/Cold Cup Whole/Cold Starbucks_4.jpg', './img/items/Cold Cup Whole/Cold Tims Drink_42.jpg', './img/items/Cold Cup Whole/Cold Coffee Cup_16.jpg', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.50.49 AM.png', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.52.54 AM.png', './img/items/Cold Cup Whole/Cold Starbucks_16.jpg', './img/items/Cold Cup Whole/Cold Tims Drink_37.jpg', './img/items/Cold Cup Whole/Cold Coffee Cup_3.jpg', './img/items/Cold Cup Whole/Screen Shot 2017-09-19 at 10.48.22 AM.png'], new: 1, old: 2
+}, 'Cold Cup Lid': {images: ['./img/items/Cold Cup Lid/Cold Cup Lid_48.jpg', './img/items/Cold Cup Lid/Cold Cup Lid_29.jpg', './img/items/Cold Cup Lid/Cold Cup Lid_2.jpg', './img/items/Cold Cup Lid/Cold Cup Lid_12.jpg', './img/items/Cold Cup Lid/Cold Cup Lid_5.jpg', './img/items/Cold Cup Lid/Cold Cup Lid_20.jpg', './img/items/Cold Cup Lid/Cold Cup Lid_9.jpg', './img/items/Cold Cup Lid/Cold Cup Lid_33.jpg', './img/items/Cold Cup Lid/Cold Cup Lid_31.jpg'], new: 1, old: 2
+}, 'Cup (Plastic)': {images: ['./img/items/Cup (Plastic)/plastic cup_12.jpg', './img/items/Cup (Plastic)/plastic cup_13.jpg', './img/items/Cup (Plastic)/plastic cup_11.jpg', './img/items/Cup (Plastic)/plastic cup_7.jpg', './img/items/Cup (Plastic)/plastic cup_4.jpg', './img/items/Cup (Plastic)/plastic cup_5.jpg', './img/items/Cup (Plastic)/plastic cup_2.jpg', './img/items/Cup (Plastic)/plastic cup_9.jpg', './img/items/Cup (Plastic)/plastic cup_32.jpg', './img/items/Cup (Plastic)/plastic cup_18.jpg', './img/items/Cup (Plastic)/plastic cup_19.jpg', './img/items/Cup (Plastic)/plastic cup_22.jpg'], new: 1, old: 2
+}, 'Cup (Styrofoam)': {images: ['./img/items/Cup (Styrofoam)/Styrofoam Cup_4.jpg', './img/items/Cup (Styrofoam)/Styrofoam Cup_5.jpg', './img/items/Cup (Styrofoam)/Styrofoam Cup_18.jpg', './img/items/Cup (Styrofoam)/Styrofoam Cup_1.jpg', './img/items/Cup (Styrofoam)/Styrofoam Cup_2.jpg', './img/items/Cup (Styrofoam)/Styrofoam Cup_3.jpg', './img/items/Cup (Styrofoam)/Styrofoam Cup_40.jpg', './img/items/Cup(Styrofoam)/Styrofoam Cup_9.jpg', './img/items/Cup (Styrofoam)/Styrofoam Cup_16.jpg', './img/items/Cup (Styrofoam)/Styrofoam Cup_17.jpg'], new: 4, old: 2
+}, 'Bottle (Glass)': {images: ['./img/items/Bottle (Glass)/Glass Bottle_9.jpg', './img/items/Bottle (Glass)/Glass Pop Bottle_21.jpg', './img/items/Bottle (Glass)/Glass Bottle_42.jpg', './img/items/Bottle (Glass)/Glass Bottle_18.jpg', './img/items/Bottle (Glass)/Glass PopBottle_4.jpg', './img/items/Bottle (Glass)/Glass Bottle_27.jpg', './img/items/Bottle (Glass)/Glass Pop Bottle_1.jpg', './img/items/Bottle (Glass)/Glass Pop Bottle_8.jpg', './img/items/Bottle (Glass)/Glass Pop Bottle_9.jpg', './img/items/Bottle (Glass)/Glass Pop Bottle_11.jpg', './img/items/Bottle (Glass)/Glass Pop Bottle_12.jpg', './img/items/Bottle (Glass)/Glass Bottle_2.jpg'], new: 1, old: 2
+}, 'Bottle (Plastic)': {images: ['./img/items/Bottle (Plastic)/Plastic Water Bottle_9.jpg', './img/items/Bottle (Plastic)/Plastic Bottle_13.jpg', './img/items/Bottle (Plastic)/Plastic Bottle_12.jpg', './img/items/Bottle (Plastic)/Plastic Bottle_1.jpg', './img/items/Bottle (Plastic)/Plastic Bottle_27.jpg', './img/items/Bottle (Plastic)/Plastic Water Bottle_30.jpg', './img/items/Bottle (Plastic)/Plastic Water Bottle_21.jpg', './img/items/Bottle (Plastic)/Plastic Bottle_20.jpg', './img/items/Bottle (Plastic)/Plastic Bottle_21.jpg', './img/items/Bottle (Plastic)/Plastic Water Bottle_50.jpg', './img/items/Bottle (Plastic)/Plastic Bottle_46.jpg', './img/items/Bottle (Plastic)/Plastic Bottle_43.jpg', './img/items/Bottle (Plastic)/Plastic Water Bottle_1.jpg'], new: 1, old: 2
+}, 'Bag (Plastic)': {images: ['./img/items/Bag (Plastic)/Plastic Bag Used_22.jpg', './img/items/Bag (Plastic)/Plastic Bag Used_13.jpg','./img/items/Bag (Plastic)/Plastic Bag Used_14.jpg', './img/items/Bag (Plastic)/Plastic Bag Used_15.jpg', './img/items/Bag (Plastic)/Plastic Bag Used_8.jpg', './img/items/Bag (Plastic)/Plastic Bag Used_9.jpg'], new: 4, old: 1
+}, 'Bag (Paper)': {images: ['./img/items/Bag (Paper)/Paper Bag_45.jpg', './img/items/Bag (Paper)/Paper Bag Used_2.jpg', './img/items/Bag (Paper)/Paper Bag Used_47.jpg', './img/items/Bag (Paper)/Paper Bag Used_46.jpg', './img/items/Bag (Paper)/Paper Bag Used_43.jpg', './img/items/Bag (Paper)/Paper Bag_34.jpg', './img/items/Bag (Paper)/Paper Bag_13.jpg', './img/items/Bag (Paper)/Paper Bag_5.jpg'], new: 4, old: 1
+}, 'Food Container (Plastic)': {images: ['./img/items/Food Container (Plastic)/disposable plastic food container_13.jpg', './img/items/Food Container (Plastic)/disposable plastic food container_11.jpg', './img/items/Food Container (Plastic)/disposable plastic food container_10.jpg', './img/items/Food Container (Plastic)/disposable plastic food container_17.jpg', './img/items/Food Container (Plastic)/disposable plastic food container_5.jpg', './img/items/Food Container (Plastic)/disposable plastic food container_6.jpg', './img/items/Food Container (Plastic)/disposable plastic food container_2.jpg', './img/items/Food Container (Plastic)/disposable plastic food container_22.jpg'], new: 1, old: 2
+}, 'Food Container (Paper)': {images: ['./img/items/Food Container (Paper)/Paper Food Container_13.jpg', './img/items/Food Container (Paper)/Paper Food Container_14.jpg', './img/items/Food Container (Paper)/Paper Food Container_16.jpg', './img/items/Food Container (Paper)/Paper Food Container_6.jpg', './img/items/Food Container (Paper)/Paper Food Container_19.jpg', './img/items/Food Container (Paper)/Paper Food Container_20.jpg', './img/items/Food Container (Paper)/Paper Food Container_37.jpg'], new: 1, old: 2
+}, 'Food Container (Styrofoam)': {images: ['./img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_20.jpg', './img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_23.jpg', './img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_22.jpg', './img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_43.jpg', './img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_9.jpg', './img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_3.jpg', './img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_1.jpg', './img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_10.jpg', './img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_11.jpg', './img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_14.jpg', './img/items/Food Container (Styrofoam)/Styrofoam Clamshell Container_17.jpg'], new: 1, old: 2
+}, 'Shopping Bag (Paper)': {images: ['./img/items/Shopping Bag (Paper)/Paper Shopping Bag_44.jpg', './img/items/Shopping Bag (Paper)/Paper Shopping Bag_8.jpg', './img/items/Shopping Bag (Paper)/Paper Shopping Bag_20.jpg', './img/items/Shopping Bag (Paper)/Paper Shopping Bag_22.jpg', './img/items/Shopping Bag (Paper)/Paper Shopping Bag_37.jpg', './img/items/Shopping Bag (Paper)/Paper Shopping Bag_1.jpg', './img/items/Shopping Bag (Paper)/Paper Shopping Bag_5.jpg'], new: 3, old: 3
+}, 'Newspaper (Paper)': {images: ['./img/items/Newspaper (Paper)/Looks Buy Newspaper_9.jpg', './img/items/Newspaper (Paper)/Looks Buy Newspaper_14.jpg', './img/items/Newspaper (Paper)/Looks Buy Newspaper_22.jpg', './img/items/Newspaper (Paper)/Looks Buy Newspaper_2.jpg','./img/items/Newspaper (Paper)/Looks Buy Newspaper_6.jpg'], new: 3, old: 3
+}, 'Pizza Tray (Paper)': {images: ['./img/items/Pizza Tray (Paper)/Pizza Slice Tray_31.jpg', './img/items/Pizza Tray (Paper)/Takeout Tray For Pizza Slice_4.jpg', './img/items/Pizza Tray (Paper)/Takeout Tray For Pizza Slice_5.jpg', './img/items/Pizza Tray (Paper)/Pizza Slice Tray_16.jpg', './img/items/Pizza Tray (Paper)/Pizza Slice Tray_15.jpg', './img/items/Pizza Tray (Paper)/Pizza Slice Tray_6.jpg'], new: 4, old: 3
+}, 'Cigarette Box (Paper)': {images: ['./img/items/Cigarette Box (Paper)/Cigarette Box_45.jpg', './img/items/Cigarette Box (Paper)/Cigarette Box_6.jpg', './img/items/Cigarette Box (Paper)/Cigarette Box_1.jpg'], new: 3, old: 3
+}, 'Plate (Paper)': {images: ['./img/items/Plate (Paper)/Paper Plate_1.jpg', './img/items/Plate (Paper)/Paper Plate_6.jpg', './img/items/Plate (Paper)/Paper Plate_13.jpg', './img/items/Plate (Paper)/Paper Plate_19.jpg', './img/items/Plate (Paper)/Paper Plate_20.jpg', './img/items/Plate (Paper)/Paper Plate_34.jpg', './img/items/Plate (Paper)/Paper Plate_44.jpg', './img/items/Plate (Paper)/Paper Plate_9.jpg'], new: 4, old: 1
+}, 'Receipt (Paper)': {images: ['./img/items/Receipt (Paper)/Starbucks Receipt_2.jpg', './img/items/Receipt (Paper)/Coffee Receipt_19.jpg', './img/items/Receipt (Paper)/Starbucks Receipt_12.jpg', './img/items/Receipt (Paper)/Coffee Receipt_35.jpg', './img/items/Receipt (Paper)/Coffee Receipt_6.jpg', './img/items/Receipt (Paper)/Coffee Receipt_40.jpg', './img/items/Receipt (Paper)/Starbucks Receipt_48.jpg', './img/items/Receipt (Paper)/Coffee Receipt_38.jpg', './img/items/Receipt (Paper)/Coffee Receipt_17.jpg'], new: 3, old: 3
+}, 'Utensil (Plastic)': {images: ['./img/items/Utensil (Plastic)/Plastic Fork_1.jpg', './img/items/Utensil (Plastic)/Black Plastic Spoon_29.jpg', './img/items/Utensil (Plastic)/Black Plastic Fork_42.jpg', './img/items/Utensil (Plastic)/Plastic Fork_3.jpg', './img/items/Utensil (Plastic)/Plastic Fork_10.jpg', './img/items/Utensil (Plastic)/Plastic Fork_7.jpg', './img/items/Utensil (Plastic)/Plastic Fork_6.jpg', './img/items/Utensil (Plastic)/Plastic Fork_11.jpg', './img/items/Utensil (Plastic)/Plastic Fork_4.jpg', './img/items/Utensil (Plastic)/Black Plastic Spoon_11.jpg', './img/items/Utensil (Plastic)/Plastic Fork_5.jpg', './img/items/Utensil (Plastic)/Plastic Spoon_4.jpg', './img/items/Utensil (Plastic)/Black Plastic Fork_3.jpg', './img/items/Utensil (Plastic)/Black Plastic Fork_2.jpg', './img/items/Utensil (Plastic)/Plastic Spoon_5.jpg', './img/items/Utensil (Plastic)/Black Plastic Fork_34.jpg', './img/items/Utensil (Plastic)/Plastic Spoon_2.jpg', './img/items/Utensil (Plastic)/Plastic Spoon_1.jpg', './img/items/Utensil (Plastic)/Plastic Spoon_16.jpg', './img/items/Utensil (Plastic)/Plastic Fork_41.jpg', './img/items/Utensil (Plastic)/Black Plastic Spoon_40.jpg', './img/items/Utensil (Plastic)/PlasticSpoon_10.jpg', './img/items/Utensil (Plastic)/Black Plastic Fork_10.jpg', './img/items/Utensil (Plastic)/Black Plastic Fork_12.jpg', './img/items/Utensil (Plastic)/Plastic Fork_8.jpg', './img/items/Utensil (Plastic)/Plastic Fork_9.jpg', './img/items/Utensil (Plastic)/Black Plastic Spoon_2.jpg'], new: 1, old: 2
+}, 'Straw (Plastic)': {images: ['./img/items/Straw (Plastic)/White Drinking Straw_10.jpg', './img/items/Straw (Plastic)/White Drinking Straw_8.jpg', './img/items/Straw (Plastic)/White Drinking Straw_25.jpg', './img/items/Straw (Plastic)/Black Drinking Straw_2.jpg', './img/items/Straw (Plastic)/White Drinking Straw_41.jpg'], new: 1, old: 2
+}, 'Juice Box (Paper)': {images: ['./img/items/Juice Box (Paper)/Juice Box_13.jpg', './img/items/Juice Box (Paper)/Juice Box_3.jpg', './img/items/Juice Box (Paper)/Juice Box_50.jpg', './img/items/Juice Box (Paper)/Juice Box_41.jpg', './img/items/Juice Box (Paper)/Juice Box_8.jpg', './img/items/Juice Box (Paper)/Juice Box_30.jpg', './img/items/Juice Box (Paper)/Juice Box_19.jpg'], new: 1, old: 2
+}, 'Aluminum Can': {images: ['./img/items/Aluminum Can/Aluminum Pop Can_20.jpg', './img/items/Aluminum Can/Aluminum Pop Can_8.jpg', './img/items/Aluminum Can/Aluminum Pop Can_18.jpg', './img/items/Aluminum Can/Aluminum Pop Can_4.jpg', './img/items/Aluminum Can/Aluminum Pop Can_7.jpg', './img/items/Aluminum Can/Aluminum Pop Can_6.jpg', './img/items/Aluminum Can/Aluminum Pop Can_2.jpg', './img/items/Aluminum Can/Aluminum Pop Can_12.jpg'], new: 1, old: 2
+}, 'Cardboard Box (Paper)': {images: ['./img/items/Cardboard Box (Paper)/cardboard box_30.jpg', './img/items/Cardboard Box (Paper)/cardboard box_19.jpg', './img/items/Cardboard Box (Paper)/cardboard box_25.jpg', './img/items/Cardboard Box (Paper)/cardboard box_9.jpg', './img/items/Cardboard Box (Paper)/cardboard_6.jpg', './img/items/Cardboard Box (Paper)/cardboard box_17.jpg', './img/items/Cardboard Box (Paper)/cardboard box_16.jpg', './img/items/Cardboard Box (Paper)/cardboard box_4.jpg', './img/items/Cardboard Box (Paper)/cardboard box_29.jpg', './img/items/Cardboard Box (Paper)/cardboard box_2.jpg', './img/items/Cardboard Box (Paper)/cardboard_1.jpg'], new: 3, old: 3
+}, 'Wrapper (Paper)': {images: ['./img/items/Wrapper (Paper)/Granola Bar Wrapper_33.jpg', './img/items/Wrapper (Paper)/Granola Bar Wrapper_19.jpg', './img/items/Wrapper (Paper)/Granola Bar Wrapper_20.jpg', './img/items/Wrapper (Paper)/Waste Foil Packaging_4.jpg', './img/items/Wrapper (Paper)/Waxed Food Packaging_38.jpg', './img/items/Wrapper (Paper)/Waxed Food Packaging_12.jpg', './img/items/Wrapper (Paper)/Waxed Food Packaging_3.jpg', './img/items/Wrapper (Paper)/Granola Bar Wrapper_1.jpg', './img/items/Wrapper (Paper)/Waxed Food Packaging_37.jpg', './img/items/Wrapper (Paper)/Granola Bar Wrapper_14.jpg'], new: 4, old: 1
+}, 'Used Tissue': {images: ['./img/items/Used Tissue/Used Napkins_22.jpg', './img/items/Used Tissue/Used Paper Towel_38.jpg', './img/items/Used Tissue/Used Paper Towel_12.jpg', './img/items/Used Tissue/Used Napkins_25.jpg', './img/items/Used Tissue/Clean Paper Towel_9.jpg', './img/items/Used Tissue/Used Paper Towel_8.jpg', './img/items/Used Tissue/Used Paper Towel_1.jpg', './img/items/Used Tissue/Used Paper Towel_3.jpg', './img/items/Used Tissue/Used Napkins_1.jpg', './img/items/Used Tissue/Used Napkins_3.jpg', './img/items/Used Tissue/Used Napkins_2.jpg', './img/items/Used Tissue/Used Napkins_28.jpg', './img/items/Used Tissue/Clean Paper Towel_6.jpg'], new: 4, old: 1
+}, 'Chip Bag': {images: ['./img/items/Chip Bag/Chip Bag_33.jpg', './img/items/Chip Bag/Chip Bag_18.jpg', './img/items/Chip Bag/Chip Bag_20.jpg', './img/items/Chip Bag/Chip Bag_41.jpg', './img/items/Chip Bag/Chip Bag_3.jpg', './img/items/Chip Bag/Chip Wrapper_4.jpg', './img/items/Chip Bag/Chip Bag_5.jpg', './img/items/Chip Bag/Chip Bag_49.jpg', './img/items/Chip Bag/Chip Wrapper_42.jpg'], new: 4, old: 1
+}, 'Food': {images: ['./img/items/Food/Banana Peel_9.jpg', './img/items/Food/Banana Peel_8.jpg', './img/items/Food/Apple Core_6.jpg', './img/items/Food/Apple Core_4.jpg', './img/items/Food/Apple Core_5.jpg', './img/items/Food/Apple Core_1.jpg', './img/items/Food/Apple Core_2.jpg', './img/items/Food/Apple Core_3.jpg', './img/items/Food/Apple Core_21.jpg', './img/items/Food/Apple Core_18.jpg', './img/items/Food/Banana Peel_1.jpg', './img/items/Food/Banana Peel_3.jpg', './img/items/Food/Banana Peel_2.jpg', './img/items/Food/Banana Peel_7.jpg', './img/items/Food/Banana Peel_5.jpg', './img/items/Food/Banana Peel_4.jpg'], new: 4, old: 1
+}, 'Magazine (Paper)': {images: ['./img/items/Magazine (Paper)/Magazine_15.jpg', './img/items/Magazine (Paper)/Magazine_4.jpg', './img/items/Magazine (Paper)/Magazine_2.jpg', './img/items/Magazine (Paper)/Magazine_3.jpg', './img/items/Magazine (Paper)/Magazine_1.jpg', './img/items/Magazine (Paper)/Magazine_8.jpg', './img/items/Magazine (Paper)/Magazine_9.jpg', './img/items/Magazine (Paper)/Magazine_36.jpg'], new: 3, old: 3
+}, 'Yogurt Container (Plastic)': {images: ['./img/items/Yogurt Container (Plastic)/Yogurt Container_25.jpg', './img/items/Yogurt Container (Plastic)/Yogurt Container_27.jpg', './img/items/Yogurt Container (Plastic)/Yogurt Container_26.jpg', './img/items/Yogurt Container (Plastic)/Yogurt Container_42.jpg', './img/items/Yogurt Container (Plastic)/Yogurt Container_4.jpg', './img/items/Yogurt Container (Plastic)/Yogurt Container_7.jpg', './img/items/Yogurt Container (Plastic)/Yogurt Container_17.jpg', './img/items/Yogurt Container (Plastic)/Yogurt Container_14.jpg', './img/items/Yogurt Container (Plastic)/Yogurt Container_29.jpg'], new: 1, old: 1
+}, 'Milk Carton (Paper)': {images: ['./img/items/Milk Carton (Paper)/Milk Carton_9.jpg', './img/items/Milk Carton (Paper)/Milk Carton_36.jpg', './img/items/Milk Carton (Paper)/Milk Carton_5.jpg', './img/items/Milk Carton (Paper)/Milk Carton_1.jpg', './img/items/Milk Carton (Paper)/Milk Carton_2.jpg'], new: 1, old: 1
+}, 'Sheets (Paper)': {images: ['./img/items/Sheets (Paper)/Lined Paper Sheet_50.jpg', './img/items/Sheets (Paper)/Lined Paper Sheet_44.jpg', './img/items/Sheets (Paper)/Lined Paper Sheet_30.jpg', './img/items/Sheets (Paper)/Lined Paper Sheet_29.jpg', './img/items/Sheets (Paper)/Lined Paper Sheet_15.jpg', './img/items/Sheets (Paper)/Lined Paper Sheet_2.jpg', './img/items/Sheets (Paper)/Paper Sheets_3.jpg'], new: 3, old: 3}};
 
-    /* define welcome message trial */
-    var welcome_block = {
-      type: "html-keyboard-response",
-      stimulus: "Mouse-Tracking. Press 'f' or 'j' to begin.",
-      choices: ['f', 'j']
-    };
-
-    /* define instructions trial */
-    var instructions = {
-      type: "html-keyboard-response",
-      stimulus: "<p>In this experiment, a circle will appear in the center " +
-          "of the screen.</p><p>If the circle is <strong>blue</strong>, " +
-          "press the letter F on the keyboard as fast as you can.</p>" +
-          "<p>If the circle is <strong>orange</strong>, press the letter J " +
-          "as fast as you can.</p>" +
-          "<div style='float: left;'><img src='./img/items/blue.png'></img>" +
-          "<p class='small'><strong>Press the F key</strong></p></div>" +
-          "<div class='float: right;'><img src='./img/items/orange.png'></img>" +
-          "<p class='small'><strong>Press the J key</strong></p></div>" +
-          "<p>Press f or j to begin.</p>",
-      choices: ['f', 'j']
-      // post_trial_gap: 2000
-    };
-
+    /*
+     * Saves trials to the DB.
+     */
     function saveTrials() {
       let _data = jsPsych.data.getLastTrialData();
 
@@ -49,53 +68,34 @@
         contentType: "application/json"
       })
       .done(function() {
-        alert('trial finished!');
+        console.log('Succesfully written to DB.');
       })
       .fail(function() {
-        alert('DID NOT WORK');
+        console.log('Failed to write to DB.');
       })
     }
 
-    // Answers
-    const 
-      SBJ = (new Date().valueOf().toString(36) + Math.random().toString(36).substr(2)),
-      LEFT = 'left_label_div', RIGHT = 'right_label_div',
-      nLABELS = ['./img/labels/new/1b.png', './img/labels/new/2b.png', './img/labels/new/3b.png', './img/labels/new/4b.png'],
-      oLABELS = ['./img/labels/old/1b.png', './img/labels/old/2b.png', './img/labels/old/3b.png', './img/labels/old/4b.png'],
-      LEGEND = {'item': 
-                  {
-                   images: ['1.jpg', '2.jpg', '3.jpg'],
-                   old: 1,
-                   new: 1
-                  },
-                 'otherItem':
-                  {
-                   images: ['3.jpg', '4.jpg', '5.jpg'],
-                   old: 3,
-                   new: 4
-                  }
-                };
-
     /*
-      * Takes the correct label index, deletes it from an array, then
-      * returns a randomly chosen one to serve as the WRONG label in 
-      * a given trial.
-      */
+     * Takes the correct label index, deletes it from an array, then
+     * returns a randomly chosen one to serve as the WRONG label in 
+     * a given trial.
+     */
     function _getWrongLabelIndex(correctIndex) {
       var x = [0, 1, 2, 3];
       x.splice(correctIndex, 1);
       return _.shuffle(x).pop();
     }
 
+
     /*
-      * Takes an array, duplicates it to have <instances> many elements,
-      * then shuffles it. If it can't be doubled, it will shuffle around
-      * then add enough to fill to <instances>.
-      * 
-      * NOTE: Won't work for odd lengths.
-      * NOTE: instances > arr.length
-      * 
-      */
+     * Takes an array, duplicates it to have <instances> many elements,
+     * then shuffles it. If it can't be doubled, it will shuffle around
+     * then add enough to fill to <instances>.
+     * 
+     * NOTE: Won't work for odd lengths.
+     * NOTE: instances > arr.length
+     * 
+     */
     function _repeatAndShuffleArray(arr, instances) {
       var timesToRepeat = (instances / arr.length); // instances > arr.length
       var nArr = [];
@@ -106,64 +106,62 @@
           }
           return _.shuffle(nArr);
 
-      } else { // 
+      } else { 
         return (_.shuffle(arr)).concat((_.shuffle(arr)).slice(0, (instances-arr.length)));
       }
     }
 
     /* 
-    | TYPE | # Trials | CONDITION              | DESCRIPTION     
-    |  1   |    20    | YES && NEW / NO && NEW | Answer YES to the NEW label, OLD label must be INCORRECT
-    |  2   |    20    | YES && OLD / NO && OLD | Answer YES to the OLD label, NEW label must be INCORRECT
-
-    - Decide Old/New
-    - Decide Correct on Left or Right
-    - Pick item -> get item image
-    - Get [item] correct label
-    - Randomly pick item incorrect label
-    */
+     * Creates, in a verbose way, experiment trials.
+     */
     function makeTrials() {
-      let timeline = [],
-          trialLength = 40,
-          conditions = repeatAndShuffleArray([true, false], trialLength), 
+      let timeline = [];
+      let trialLength = 40;
+      var conditions = _repeatAndShuffleArray([true, false], trialLength), 
           divs = _repeatAndShuffleArray([true, false], trialLength),
           targets = _repeatAndShuffleArray(ITEMS, trialLength);
 
       for (var i=0; i<trialLength; i++) {
 
+        // TODO: Port this into its own function?
         var leftLabel, rightLabel, correctDiv, index;
 
-        /* Annoying conditionals to get proper information */
-        if (conditions[i]) { // New
-          index = (LEGEND[targets[i]].new) - 1; // runs 1-4
-          if(divs[i]) { // left == correct
-            leftLabel = nLABELS[index];
+        if (conditions[i]) { // New labels...
+  
+          index = (LEGEND[targets[i]].new) - 1; // Runs [1-4], so translate to [0-3]
+
+          if(divs[i]) { // Left DIV will be the CORRECT choice
+            leftLabel = nLABELS[index]; // Get the correct label image.
             rightLabel = nLABELS[_getWrongLabelIndex(index)];
             correctDiv = 'left_label_div';
-          } else { // right == correct
+
+          } else { // Right DIV will be CORRECY choice
             leftLabel = nLABELS[_getWrongLabelIndex(index)];
             rightLabel = nLABELS[index];
             correctDiv = 'right_label_div';
           }
-        } else { // Old
-          index = (LEGEND[targets[i]].old) - 1; // runs 1-4
-          if(divs[i]) { // left == correct
+
+        } else { // Old labels...
+          index = (LEGEND[targets[i]].old) - 1;
+
+          if(divs[i]) {
             leftLabel = oLABELS[index];
-            rightLabel = oLABELS[_getWrongTrialIndex(index)];
+            rightLabel = oLABELS[_getWrongLabelIndex(index)];
             correctDiv = 'left_label_div';
-          } else { // right == correct
-            leftLabel = oLABELS[_getWrongTrialIndex(index)];
+
+          } else {
+            leftLabel = oLABELS[_getWrongLabelIndex(index)];
             rightLabel = oLABELS[index];
             correctDiv = 'right_label_div';
           }
         }
 
         timeline.push({
-          type: 'aaron-response',
+          type: "aaron-response",
           subject: SBJ,
           label_left: leftLabel,
           label_right: rightLabel,
-          target_item: _.sample(targets[i].images, 1), // picks a random image
+          target_item: _.sample(LEGEND[targets[i]].images, 1)[0], // picks a random image
           correct_response: correctDiv,
           on_finish: saveTrials
         });
@@ -171,28 +169,27 @@
       return timeline;
     }
 
- 
-    var tempItems = ['./img/items/blue.png', './img/items/orange.png'];
-    var test1 = 
-      {type: 'aaron-response',
-       subject: SBJ,
-       label_left: nLABELS[0], 
-       label_right: oLABELS[1], 
-       target_item: tempItems[0],
-       correct_response: LEFT,
-       on_finish: saveTrials
-      };
 
-   var test2 = 
-      {type: 'aaron-response',
-       subject: SBJ,
-       label_left: nLABELS[0], 
-       label_right: oLABELS[1], 
-       target_item: tempItems[0],
-       correct_response: LEFT,
-       on_finish: saveTrials
-      };
+    //   var tempItems = ['./img/items/blue.png', './img/items/orange.png'];
+    //   var test1 = 
+    //     {type: 'aaron-response',
+    //      subject: SBJ,
+    //      label_left: nLABELS[0], 
+    //      label_right: oLABELS[1], 
+    //      target_item: tempItems[0],
+    //      correct_response: LEFT,
+    //      on_finish: saveTrials
+    //     };
 
+    //  var test2 = 
+    //     {type: 'aaron-response',
+    //      subject: SBJ,
+    //      label_left: nLABELS[0], 
+    //      label_right: oLABELS[1], 
+    //      target_item: tempItems[0],
+    //      correct_response: LEFT,
+    //      on_finish: saveTrials
+    //     };
 
     // var fixation = {
     //   type: 'html-keyboard-response',
@@ -204,6 +201,31 @@
     //   },
     //   data: {test_part: 'fixation'}
     // }
+
+    // /* define instructions trial */
+    // var instructions = {
+    //   type: "html-keyboard-response",
+    //   stimulus: "<p>In this experiment, a circle will appear in the center " +
+    //       "of the screen.</p><p>If the circle is <strong>blue</strong>, " +
+    //       "press the letter F on the keyboard as fast as you can.</p>" +
+    //       "<p>If the circle is <strong>orange</strong>, press the letter J " +
+    //       "as fast as you can.</p>" +
+    //       "<div style='float: left;'><img src='./img/items/blue.png'></img>" +
+    //       "<p class='small'><strong>Press the F key</strong></p></div>" +
+    //       "<div class='float: right;'><img src='./img/items/orange.png'></img>" +
+    //       "<p class='small'><strong>Press the J key</strong></p></div>" +
+    //       "<p>Press f or j to begin.</p>",
+    //   choices: ['f', 'j']
+    //   // post_trial_gap: 2000
+    // };
+
+    var templine = [];
+
+    var welcome_block = {
+      type: "html-keyboard-response",
+      stimulus: "Mouse-Tracking. Press 'f' or 'j' to begin.",
+      choices: ['f', 'j']
+    };
 
     var debrief_block = {
       type: "html-keyboard-response",
@@ -220,14 +242,12 @@
       }
     };
 
-
-    // timeline.push(welcome_block);
-    // timeline.push(instructions);
-    timeline.push(test1);
-    timeline.push(test2);
+    // In a butchered way, make the trials.
+    var trials = makeTrials();
+    templine.push(welcome_block);
+    var timeline = templine.concat(trials);
     timeline.push(debrief_block);
 
-    /* start the experiment */
     jsPsych.init({
       timeline: timeline,
       on_finish: function() { jsPsych.data.displayData(); }

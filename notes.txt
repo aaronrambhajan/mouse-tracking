@@ -1,0 +1,14 @@
+NOTES
+
+- <items.csv> is read [ITEM,NEW,OLD]
+- All correctness ratings are categorized FIRST by their appearance on the label, and if they are not represented, they are judged on material and contamination threshold.
+
+| TYPE | # Trials | CONDITION              | DESCRIPTION     
+|  1   |    20    | YES && NEW / NO && NEW | Answer YES to the NEW label, OLD label must be INCORRECT
+|  2   |    20    | YES && OLD / NO && OLD | Answer YES to the OLD label, NEW label must be INCORRECT
+
+- Decide Old/New
+- Decide Correct on Left or Right
+- Pick item -> get item image
+- Get [item] correct label
+- Randomly pick item incorrect label
