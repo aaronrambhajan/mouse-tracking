@@ -41,7 +41,7 @@ jsPsych.plugins["aaron-response"] = (function() {
       prompt: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Prompt',
-        default: null,
+        default: '',
         description: 'Any content here will be displayed below the stimulus.'
       },
       stimulus_duration: {
